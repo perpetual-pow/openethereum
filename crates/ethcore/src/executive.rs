@@ -1516,20 +1516,20 @@ impl<'a, B: 'a + StateBackend> Executive<'a, B> {
         // Up until now, fees_value is calculated for each type of transaction based on their gas prices
         // Now, if eip1559 is activated, burn the base fee
         // miner only receives the inclusion fee; note that the base fee is not given to anyone (it is burned)
-        let burnt_fee = if schedule.eip1559 && !t.has_zero_gas_price() {
-            let (fee, overflow_3) =
-                gas_used.overflowing_mul(self.info.base_fee.unwrap_or_default());
-            if overflow_3 {
-                return Err(ExecutionError::TransactionMalformed(
-                    "U256 Overflow".to_string(),
-                ));
-            }
-            fee
-        } else {
-            U256::from(0)
-        };
+        // let burnt_fee = if schedule.eip1559 && !t.has_zero_gas_price() {
+        //     let (fee, overflow_3) =
+        //         gas_used.overflowing_mul(self.info.base_fee.unwrap_or_default());
+        //     if overflow_3 {
+        //         return Err(ExecutionError::TransactionMalformed(
+        //             "U256 Overflow".to_string(),
+        //         ));
+        //     }
+        //     fee
+        // } else {
+        //     U256::from(0)
+        // };
 
-        let fees_value = fees_value.saturating_sub(burnt_fee);
+        // let fees_value = fees_value.saturating_sub(burnt_fee);
 
         trace!("exec::finalize: t.gas={}, sstore_refunds={}, suicide_refunds={}, refunds_bound={}, gas_left_prerefund={}, refunded={}, gas_left={}, gas_used={}, refund_value={}, fees_value={}\n",
 			t.tx().gas, sstore_refunds, suicide_refunds, refunds_bound, gas_left_prerefund, refunded, gas_left, gas_used, refund_value, fees_value);
