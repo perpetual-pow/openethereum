@@ -30,6 +30,8 @@ pub const NODE_DWORDS: usize = NODE_WORDS / 2;
 pub const NODE_WORDS: usize = NODE_BYTES / 4;
 pub const NODE_BYTES: usize = 64;
 
+pub const ETHASH_EPOCH_OFFSET: u64 = 128;
+
 pub fn epoch(block_number: u64) -> u64 {
     block_number / ETHASH_EPOCH_LENGTH
 }
@@ -47,7 +49,9 @@ pub fn to_hex(bytes: &[u8]) -> String {
 
 pub fn get_cache_size(block_number: u64) -> usize {
     // TODO: Memoise
-    let mut sz: u64 = CACHE_BYTES_INIT + CACHE_BYTES_GROWTH * (block_number / ETHASH_EPOCH_LENGTH);
+    let mut sz: u64 = CACHE_BYTES_INIT
+        + CACHE_BYTES_GROWTH * (block_number / ETHASH_EPOCH_LENGTH)
+        + CACHE_BYTES_GROWTH * ETHASH_EPOCH_OFFSET;
     sz = sz - NODE_BYTES as u64;
     while !is_prime(sz / NODE_BYTES as u64) {
         sz = sz - 2 * NODE_BYTES as u64;
@@ -57,8 +61,9 @@ pub fn get_cache_size(block_number: u64) -> usize {
 
 pub fn get_data_size(block_number: u64) -> usize {
     // TODO: Memoise
-    let mut sz: u64 =
-        DATASET_BYTES_INIT + DATASET_BYTES_GROWTH * (block_number / ETHASH_EPOCH_LENGTH);
+    let mut sz: u64 = DATASET_BYTES_INIT
+        + DATASET_BYTES_GROWTH * (block_number / ETHASH_EPOCH_LENGTH)
+        + DATASET_BYTES_GROWTH * ETHASH_EPOCH_OFFSET;
     sz = sz - ETHASH_MIX_BYTES as u64;
     while !is_prime(sz / ETHASH_MIX_BYTES as u64) {
         sz = sz - 2 * ETHASH_MIX_BYTES as u64;

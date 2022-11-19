@@ -25,7 +25,7 @@ use std::{
 use ethereum_types::{Address, BigEndianHash, H160, H256, H64, U256, U64};
 use parking_lot::Mutex;
 
-use ethash::{self, SeedHashCompute};
+use ethash::{self, SeedHashCompute, ETHASH_EPOCH_LENGTH, ETHASH_EPOCH_OFFSET};
 use ethcore::{
     client::{
         BlockChainClient, BlockId, Call, EngineInfo, ProvingBlockChainClient, StateClient,
@@ -1311,7 +1311,7 @@ where
                 pow_hash,
                 seed_hash: seed_hash.into(),
                 target,
-                number: Some(number),
+                number: Some(number + ETHASH_EPOCH_LENGTH * ETHASH_EPOCH_OFFSET),
             })
         }
     }

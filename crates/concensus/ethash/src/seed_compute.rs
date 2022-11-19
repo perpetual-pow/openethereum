@@ -17,12 +17,23 @@
 use keccak::{keccak_256, H256};
 use shared;
 
+use shared::ETHASH_EPOCH_OFFSET;
 use std::cell::Cell;
 
-#[derive(Default)]
 pub struct SeedHashCompute {
     prev_epoch: Cell<u64>,
     prev_seedhash: Cell<H256>,
+}
+
+impl Default for SeedHashCompute {
+    fn default() -> Self {
+        let me = SeedHashCompute {
+            prev_epoch: Cell::new(0),
+            prev_seedhash: Cell::new([0u8; 32]),
+        };
+        me.reset_cache();
+        me
+    }
 }
 
 impl SeedHashCompute {
@@ -30,6 +41,12 @@ impl SeedHashCompute {
     fn reset_cache(&self) {
         self.prev_epoch.set(0);
         self.prev_seedhash.set([0u8; 32]);
+        let seed_hash = SeedHashCompute::resume_compute_seedhash(
+            self.prev_seedhash.get(),
+            0,
+            ETHASH_EPOCH_OFFSET,
+        );
+        self.prev_seedhash.set(seed_hash);
     }
 
     #[inline]

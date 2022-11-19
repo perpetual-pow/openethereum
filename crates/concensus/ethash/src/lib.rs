@@ -57,7 +57,7 @@ use ethereum_types::{BigEndianHash, U256, U512};
 use keccak::H256;
 use parking_lot::Mutex;
 pub use seed_compute::SeedHashCompute;
-pub use shared::ETHASH_EPOCH_LENGTH;
+pub use shared::{ETHASH_EPOCH_LENGTH, ETHASH_EPOCH_OFFSET};
 use std::{
     convert::TryFrom,
     mem,
